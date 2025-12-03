@@ -4,36 +4,72 @@
 
 **URL**: https://lovable.dev/projects/37d8e500-a454-4aaa-89bb-4442de33bf6e
 
-## How can I edit this code?
+## Local development (Bun + Turborepo)
 
-There are several ways of editing your application.
+This project is now a Bun-based Turborepo monorepo with two apps:
 
-**Use Lovable**
+- `apps/web` – Vite/React frontend (current Gym UI)
+- `apps/server` – Node/Express + TypeScript backend using Neon + Drizzle ORM
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/37d8e500-a454-4aaa-89bb-4442de33bf6e) and start prompting.
+### Prerequisites
 
-Changes made via Lovable will be committed automatically to this repo.
+- Bun installed (v1.2.x): https://bun.sh
+- Node.js installed (for running Express/nodemon)
 
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+### Install dependencies
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+bun install
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Configure environment variables
 
-# Step 3: Install the necessary dependencies.
-npm i
+Backend (`apps/server/.env` – copy from `.env.example`):
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+```sh
+cd apps/server
+cp .env.example .env   # or create manually
+```
+
+Set at least:
+
+- `DATABASE_URL` – Neon PostgreSQL URL
+- `WEB_ORIGIN` – e.g. `http://localhost:8080`
+- Optional Twilio WhatsApp settings for automated messages:
+  - `TWILIO_ACCOUNT_SID`
+  - `TWILIO_AUTH_TOKEN`
+  - `TWILIO_WHATSAPP_FROM` (e.g. `whatsapp:+1415xxxxxxx`)
+
+Frontend (`apps/web/.env` – copy from `.env.example`):
+
+```sh
+cd apps/web
+cp .env.example .env
+```
+
+Adjust `VITE_API_BASE_URL` if your API runs on a different port.
+
+### Run all apps in dev mode
+
+From the repo root:
+
+```sh
+bun run dev
+```
+
+This runs both:
+
+- Web: http://localhost:8080
+- API: http://localhost:3001
+
+You can also run them individually:
+
+```sh
+# Only web
+bun run dev:web
+
+# Only server
+bun run dev:server
 ```
 
 **Edit a file directly in GitHub**
@@ -54,11 +90,11 @@ npm run dev
 
 This project is built with:
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+- Turborepo (monorepo orchestration)
+- Bun (package manager)
+- Vite, TypeScript, React, shadcn-ui, Tailwind CSS (frontend)
+- Node, Express, TypeScript, Neon, Drizzle ORM (backend)
+- Twilio WhatsApp + cron-based notifier for automated WhatsApp messages
 
 ## How can I deploy this project?
 

@@ -3,10 +3,24 @@ import { StatCard } from "@/components/dashboard/StatCard";
 import { BranchChart } from "@/components/dashboard/BranchChart";
 import { PlanChart } from "@/components/dashboard/PlanChart";
 import { ExpiringMembers } from "@/components/dashboard/ExpiringMembers";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "@/lib/api";
 import { mockMembers, calculateDashboardStats } from "@/data/mockData";
 
 export default function Dashboard() {
-  const stats = calculateDashboardStats(mockMembers);
+  const { data: stats } = useQuery({
+    queryKey: ["dashboard-stats"],
+    queryFn: api.getDashboardStats,
+  });
+
+  const { data: members } = useQuery({
+    queryKey: ["members"],
+    queryFn: api.getMembers,
+  });
+
+  const fallbackStats = calculateDashboardStats(mockMembers);
+  const effectiveStats = stats ?? fallbackStats;
+  const effectiveMembers = members ?? mockMembers;
 
   return (
     <div className="space-y-6 animate-fade-in">
@@ -21,31 +35,31 @@ export default function Dashboard() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
         <StatCard
           title="Total Members"
-          value={stats.totalMembers}
+          value={effectiveStats.totalMembers}
           icon={Users}
           variant="default"
         />
         <StatCard
           title="Active Members"
-          value={stats.activeMembers}
+          value={effectiveStats.activeMembers}
           icon={UserCheck}
           variant="success"
         />
         <StatCard
           title="Expiring This Week"
-          value={stats.expiringThisWeek}
+          value={effectiveStats.expiringThisWeek}
           icon={AlertTriangle}
           variant="warning"
         />
         <StatCard
           title="Expired"
-          value={stats.expiredMembers}
+          value={effectiveStats.expiredMembers}
           icon={UserX}
           variant="destructive"
         />
         <StatCard
           title="Revenue (Active)"
-          value={`₹${stats.monthlyRevenue.toLocaleString()}`}
+          value={`₹${effectiveStats.monthlyRevenue.toLocaleString()}`}
           icon={IndianRupee}
           variant="primary"
         />
@@ -53,12 +67,13 @@ export default function Dashboard() {
 
       {/* Charts Row */}
       <div className="grid gap-6 lg:grid-cols-2">
-        <BranchChart data={stats.branchDistribution} />
-        <PlanChart data={stats.planDistribution} />
+        <BranchChart data={effectiveStats.branchDistribution} />
+        <PlanChart data={effectiveStats.planDistribution} />
       </div>
 
       {/* Expiring Members */}
-      <ExpiringMembers members={mockMembers} />
+      <ExpiringMembers members={effectiveMembers} />
     </div>
   );
 }
+
