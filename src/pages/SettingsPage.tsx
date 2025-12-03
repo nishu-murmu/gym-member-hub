@@ -1,12 +1,12 @@
 import { AppLayout } from "@/components/layout/AppLayout";
-import Dashboard from "./Dashboard";
+import Settings from "./Settings";
 
-const Index = () => {
+const SettingsPage = () => {
   return (
     <AppLayout>
-      <Dashboard />
+      <Settings />
     </AppLayout>
   );
 };
 
-export default Index;
+export default SettingsPage;
