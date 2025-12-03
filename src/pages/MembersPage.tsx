@@ -1,12 +1,12 @@
 import { AppLayout } from "@/components/layout/AppLayout";
-import Dashboard from "./Dashboard";
+import Members from "./Members";
 
-const Index = () => {
+const MembersPage = () => {
   return (
     <AppLayout>
-      <Dashboard />
+      <Members />
     </AppLayout>
   );
 };
 
-export default Index;
+export default MembersPage;
