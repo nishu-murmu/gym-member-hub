@@ -4,8 +4,8 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { VitePWA } from "vite-plugin-pwa";
 
-// https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
+  root: __dirname,
   server: {
     host: "::",
     port: 8080,
@@ -19,7 +19,8 @@ export default defineConfig(({ mode }) => ({
       manifest: {
         name: "GymPro Management System",
         short_name: "GymPro",
-        description: "Professional gym management system for tracking members and subscriptions",
+        description:
+          "Professional gym management system for tracking members and subscriptions",
         start_url: "/",
         display: "standalone",
         background_color: "#f8fafc",
@@ -50,4 +51,8 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    outDir: "dist",
+  },
 }));
+
